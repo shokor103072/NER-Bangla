@@ -52,23 +52,53 @@ Model Saved!
 ```
 
 This script will generate a Named Entity Recognition (NER) model, aptly titled 
-- `ner_model.pkl` 
-- [Saved Model after Training - drive_link](https://drive.google.com/file/d/142uUmhN74gKVKZ68fDcYQZjjN0Ygz7Mr/view?usp=drive_link)
+- `ner_model.pkl` ([Saved Model after Training - drive_link](https://drive.google.com/file/d/142uUmhN74gKVKZ68fDcYQZjjN0Ygz7Mr/view?usp=drive_link))
 ## Find NER Tag Using Trained Model `test.py`
 
 ```
 from bnlp import NER
-bn_ner = NER()
-model_path = "./path/ner_model.pkl"
-text = "ডিপিডিসির স্পেশাল টাস্কফোর্সের প্রধান মুনীর চৌধুরী জানান "
-result = bn_ner.tag(model_path, text)
-print(result)
-[('ডিপিডিসির', 'O'), ('স্পেশাল', 'O'), ('টাস্কফোর্সের', 'O'), ('প্রধান', 'O'), ('মুনীর', 'B-PER'), ('চৌধুরী', 'E-PER'), ('জানান', 'O')]
 
-# Filter the results to only include 'Person' tag
-person_tags = [t for t in result if t[1] == 'B-PER' or t[1] == 'E-PER' or t[1] == 'S-PER']
-print(person_tags)
-[('মুনীর', 'B-PER'), ('চৌধুরী', 'E-PER')]
+def collect_entities(tagged_text):
+    entities = []
+    current_entity = []
+    for word, tag in tagged_text:
+        if tag == 'O':
+            if current_entity:
+                entities.append(' '.join(current_entity))
+                current_entity = []
+        elif tag in ['B-PER', 'I-PER', 'E-PER', 'S-PER']:
+            current_entity.append(word)
+    if current_entity:
+        entities.append(' '.join(current_entity))
+    return entities
+
+# Load trained model
+bn_ner = NER()
+model_path = "/content/ner_model.pkl"
+
+# List of texts for Named Entity Recognition
+text_list = [
+    "আব্দুর রহিম নামের কাস্টমারকে একশ টাকা বাকি দিলাম",
+    "১০০ টাকা জমা দিয়েছেন কবির",
+    "ডিপিডিসির স্পেশাল টাস্কফোর্সের প্রধান মুনীর চৌধুরী জানান",
+    "অগ্রণী ব্যাংকের জ্যেষ্ঠ কর্মকর্তা পদে নিয়োগ পরীক্ষার প্রশ্নপত্র ফাঁসের অভিযোগ উঠেছে।",
+    "সে আজকে ঢাকা যাবে",
+]
+
+# Perform Named Entity Recognition for each text and extract entities tagged as 'Person'
+for text in text_list:
+    tagged_text = bn_ner.tag(model_path, text)
+    person_entities = collect_entities(tagged_text)
+    print(person_entities)
+
+
+
+Output :
+['আব্দুর রহিম', 'কাস্টমারকে']
+['কবির']
+['মুনীর চৌধুরী']
+['কর্মকর্তা']
+[]
 
 ```
 # References
