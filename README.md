@@ -8,7 +8,8 @@
 - OS: Linux, Windows, Mac
 
 # Bangali NER
-## Train NER Tag Model `train.py`
+## Train NER Tag Model
+- run `python train.py`
 ```
 import json
 from bnlp import NER
@@ -52,8 +53,10 @@ Model Saved!
 ```
 
 This script will generate a Named Entity Recognition (NER) model, aptly titled 
-- `ner_model.pkl` ([Saved Model after Training - drive_link](https://drive.google.com/file/d/142uUmhN74gKVKZ68fDcYQZjjN0Ygz7Mr/view?usp=drive_link))
-## Find NER Tag Using Trained Model `test.py`
+- `ner_model.pkl` ([Saved Model after training - drive_link](https://drive.google.com/file/d/142uUmhN74gKVKZ68fDcYQZjjN0Ygz7Mr/view?usp=drive_link))
+## Find NER Tag Using Trained Model 
+if you want to use already trained model please download pretrain model from [google drive](https://drive.google.com/file/d/142uUmhN74gKVKZ68fDcYQZjjN0Ygz7Mr/view?usp=drive_link) (29.8MB) and set the model path in `test.py` file
+- run `python test.py`
 
 ```
 from bnlp import NER
